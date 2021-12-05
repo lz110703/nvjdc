@@ -1,4 +1,196 @@
-#小呱呱备份nolan大佬，仅自用
+# nvjdc
+
+
+## 注意 注意注意
+
+    HUBdcoker里面有一个 nolanjdc/nvjdc 镜像不要拉 我看还有500多人拉了 起名都有所图 别的我不多说了把
+
+    我自己的docker  nolanhzy/nvjdc 认清楚
+
+## 提示
+
+由于我自己的环境是centos x86，arm不支持
+
+这是打包过的 不要fork
+
+不是热更新 每次修改配置需要重启容器
+
+## Windows安装教程
+
+
+# 1安装ASP.NET Core Runtime 5.0.12
+
+安装地址:https://dotnet.microsoft.com/download/dotnet/5.0
+下载之后无脑下一步
+
+# 2下载当前项目源码解压
+
+# 3删除NETJDC.deps.json
+
+
+# 4如果是windows server根据自己系统将dll复制根目录即可
+
+64位
+
+复制runtimes\win-x64\native\OpenCvSharpExtern.dll到根目录
+
+32位
+
+复制runtimes\win-x86\native\OpenCvSharpExtern.dll到根目录
+
+# 启动 
+
+ 管理员打开CMD CD到源码文件夹中  输入 dotnet NETJDC.dll --urls=http://*:5000
+
+ 后面那个是端口可以自己改
+
+## docker安装教程
+
+如果你是装过NVjdc 先看看后面1.2以前如何更新之1.2升级说明
+
+1拉源码
+国内
+```
+git clone https://ghproxy.com/https://github.com/NolanHzy/nvjdcdocker.git /root/nolanjdc
+```
+国外
+```
+git clone https://github.com/NolanHzy/nvjdcdocker.git /root/nolanjdc
+```
+
+
+2 拉取基础镜像以后不需要拉取镜像了 如果需要拉取我会通知
+```
+sudo docker pull nolanhzy/nvjdc:latest
+```
+
+3 执行命令
+
+```
+yum install wget unzip -y
+```
+
+4创建一个目录放配置
+
+```
+ cd /root/nolanjdc
+```
+```
+mkdir -p  Config && cd Config
+```
+
+5下载config.json 配置文件 并且修改自己的配置 不能缺少
+源码库已经关闭了Json 需要自行需找。
+
+```
+wget -O Config.json  https://raw.githubusercontent.com/NolanHzy/nvjdc/main/Config.json
+```
+国内请使用
+ ```
+wget -O Config.json   https://ghproxy.com/https://raw.githubusercontent.com/NolanHzy/nvjdc/main/Config.json
+```
+
+6 回到nolanjdc目录创建chromium文件夹并进入
+
+```
+cd /root/nolanjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
+```
+
+7下载 chromium 
+
+```
+wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip && unzip chrome-linux.zip
+```
+
+8删除刚刚下载的压缩包 
+
+```
+rm  -f chrome-linux.zip
+```
+
+9回到刚刚创建的目录
+
+```
+cd  /root/nolanjdc
+```
+
+
+
+10启动镜像
+
+```
+sudo docker run   --name nolanjdc -p 5701:80 -d  -v  "$(pwd)":/app \
+-v /etc/localtime:/etc/localtime:ro \
+-it --privileged=true  nolanhzy/nvjdc:latest
+```
+
+11查看 日志 
+
+```
+docker logs -f nolanjdc 
+```
+
+  
+
+出现 NETJDC  started 即可 
+
+
+## 1.2以前如何更新之1.2
+如果你是装过NVjdc 并且root下存在nolanjdc 文件夹
+
+并且你的浏览器和配置已经在/root/nolanjdc文件下了
+
+
+请你将你现有的/root/nolanjdc更换名称 如nolanjdcdb
+```
+mv /root/nolanjdc /root/nolanjdcdb
+```
+
+然后执行步骤一 拉取代码
+国内
+```
+git clone https://ghproxy.com/https://github.com/NolanHzy/nvjdcdocker.git /root/nolanjdc
+```
+国外
+```
+git clone https://github.com/NolanHzy/nvjdcdocker.git /root/nolanjdc
+```
+
+
+然后将刚刚更换名称文件夹 如nolanjdcdb中的 配置文件放到/root/nolanjdc/Config 文件夹中
+```
+ cd /root/nolanjdc &&  mkdir -p  Config &&  mv /root/nolanjdcdb/Config.json /root/nolanjdc/Config/Config.json
+```
+
+将刚刚更换名称文件夹 如nolanjdcdb 中的浏览器所有文件放到/root/nolanjdc/.local-chromium/Linux-884014 文件夹中
+```
+ cd /root/nolanjdc &&    mv /root/nolanjdcdb/.local-chromium /root/nolanjdc/.local-chromium
+```
+
+删除容器
+```
+docker rm -f nolanjdc 
+```
+然后从步骤9开始即可
+
+后续更新只需要按照下方代码更新即可
+
+
+## 更新
+
+```
+cd /root/nolanjdc
+```
+```
+docker stop nolanjdc
+```
+```
+git pull
+```
+```
+docker start nolanjdc
+```
+
 
 ## 特别声明:
 
